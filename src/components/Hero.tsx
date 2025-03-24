@@ -1,10 +1,23 @@
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { ArrowDown } from "lucide-react";
 
 const Hero = () => {
   const parallaxRef = useRef<HTMLDivElement>(null);
+  const [displayText, setDisplayText] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [loopNum, setLoopNum] = useState(0);
+  const [typingSpeed, setTypingSpeed] = useState(150);
+
+  const expertises = [
+    'Cinematographer',
+    'Cybersecurity Specialist',
+    'Network Engineer',
+    'Systems Architect',
+    'Digital Defender',
+    'Sound Engineer'
+  ];
   
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -22,6 +35,42 @@ const Hero = () => {
       document.removeEventListener('mousemove', handleMouseMove);
     };
   }, []);
+
+  useEffect(() => {
+    const current = loopNum % expertises.length;
+    const fullText = expertises[current];
+
+    let timeout: NodeJS.Timeout;
+    
+    if (!isDeleting) {
+      // Adding characters
+      if (displayText !== fullText) {
+        timeout = setTimeout(() => {
+          setDisplayText(fullText.substring(0, displayText.length + 1));
+        }, typingSpeed);
+      } else {
+        // Start deleting after pause
+        timeout = setTimeout(() => {
+          setIsDeleting(true);
+          setTypingSpeed(75); // Faster when deleting
+        }, 1500);
+      }
+    } else {
+      // Removing characters
+      if (displayText) {
+        timeout = setTimeout(() => {
+          setDisplayText(fullText.substring(0, displayText.length - 1));
+        }, typingSpeed);
+      } else {
+        // Move to next text
+        setIsDeleting(false);
+        setLoopNum(loopNum + 1);
+        setTypingSpeed(150); // Normal speed when typing
+      }
+    }
+    
+    return () => clearTimeout(timeout);
+  }, [displayText, isDeleting, loopNum, typingSpeed, expertises]);
 
   return (
     <section 
@@ -47,8 +96,9 @@ const Hero = () => {
       {/* Content overlay */}
       <div className="container relative z-10 text-center px-4 md:px-0">
         <div className="animate-fade-in space-y-6">
-          <h2 className="text-white/80 text-xl md:text-2xl font-light tracking-wider">
-            Cinematographer & Cybersecurity Specialist
+          <h2 className="text-white/80 text-xl md:text-2xl font-light tracking-wider h-8">
+            <span className="typewriter">{displayText}</span>
+            <span className="inline-block w-[2px] h-5 bg-white/80 ml-1 animate-pulse"></span>
           </h2>
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-gradient mb-6">
             Steve Anik Adhikari

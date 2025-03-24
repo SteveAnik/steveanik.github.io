@@ -173,3 +173,7 @@ html {
 .link-underline:hover::after {
   width: 100%;
 }
+
+.typewriter {
+  display: inline-block;
+}
