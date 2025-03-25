@@ -8,7 +8,7 @@ const Hero = () => {
   const [displayText, setDisplayText] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
   const [loopNum, setLoopNum] = useState(0);
-  const [typingSpeed, setTypingSpeed] = useState(150);
+  const [typingSpeed, setTypingSpeed] = useState(80); // Faster initial typing speed (was 150)
 
   const expertises = [
     'Cinematographer',
@@ -52,8 +52,8 @@ const Hero = () => {
         // Start deleting after pause
         timeout = setTimeout(() => {
           setIsDeleting(true);
-          setTypingSpeed(75); // Faster when deleting
-        }, 1500);
+          setTypingSpeed(40); // Faster deletion speed (was 75)
+        }, 1000); // Shorter pause before deleting (was 1500)
       }
     } else {
       // Removing characters
@@ -65,7 +65,7 @@ const Hero = () => {
         // Move to next text
         setIsDeleting(false);
         setLoopNum(loopNum + 1);
-        setTypingSpeed(150); // Normal speed when typing
+        setTypingSpeed(80); // Faster typing speed (was 150)
       }
     }
     
